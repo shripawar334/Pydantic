@@ -21,7 +21,22 @@ class patient(BaseModel):
         if domain_name not in valid_domains:
             raise ValueError(f'Email domain must be one of the following: {valid_domains}')
         return value
-
+    
+    @field_validator('name')
+    @classmethod
+    def transform_name(cls, value):
+        return value.upper()
+    
+    # the default value of mode is after
+    @field_validator('age', mode='after')
+    @classmethod
+    def validate_age(cls, value):
+        if 0<value < 100:
+            return value
+        else:
+            raise ValueError('Age must be between 0 and 100')
+        
+    
 def insert_patient_data(patient: patient):
     print(patient.name)
     print(patient.age)
